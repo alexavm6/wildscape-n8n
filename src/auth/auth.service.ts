@@ -93,6 +93,7 @@ export class AuthService {
 
     // Generar token
     return {
+      statusCode: 200,
       user: {
         id: user._id,
         names: user.names,
