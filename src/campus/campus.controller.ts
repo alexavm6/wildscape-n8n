@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { CampusService } from './campus.service';
 import { PaginationDto } from '@common/dto/pagination.dto';
@@ -24,14 +25,16 @@ import { UpdateCampusDto } from './dto/update-campus.dto';
 export class CampusController {
   constructor(private readonly campusService: CampusService) {}
 
-  /*
-    para: administrador
-  */
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management-filter')
   async findAllManagementFilter(@Query('name') name?: string) {
-    return this.campusService.findAllManagementFilter(name);
+    const data = await this.campusService.findAllManagementFilter(name);
+    return {
+      statusCode: 200,
+      message: 'Filtro administrativo aplicado correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -40,14 +43,26 @@ export class CampusController {
   async findAllManagement(
     @Query() paginationManagementCampusDto: PaginationManagementCampusDto,
   ) {
-    return this.campusService.findAllManagement(paginationManagementCampusDto);
+    const data = await this.campusService.findAllManagement(
+      paginationManagementCampusDto,
+    );
+    return {
+      statusCode: 200,
+      message: 'Campus administrativos listados correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management/:id')
   async findByIdManagement(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.campusService.findByIdManagement(id);
+    const data = await this.campusService.findByIdManagement(id);
+    return {
+      statusCode: 200,
+      message: 'Campus administrativo obtenido correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -57,20 +72,35 @@ export class CampusController {
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateCampusDto: UpdateCampusDto,
   ) {
-    return this.campusService.updateById(id, updateCampusDto);
+    const data = await this.campusService.updateById(id, updateCampusDto);
+    return {
+      statusCode: 200,
+      message: 'Campus actualizado correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createCampusDto: CreateCampusDto) {
-    return this.campusService.create(createCampusDto);
+    const data = await this.campusService.create(createCampusDto);
+    return {
+      statusCode: 200,
+      message: 'Campus creado correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async delete(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.campusService.delete(id);
+    const data = await this.campusService.delete(id);
+    return {
+      statusCode: 200,
+      message: 'Campus eliminado correctamente',
+      data,
+    };
   }
 }

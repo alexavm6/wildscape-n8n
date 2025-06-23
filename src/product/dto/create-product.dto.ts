@@ -2,18 +2,16 @@ import {
   IsString,
   IsNotEmpty,
   IsNumber,
-  IsDateString,
   IsBoolean,
   IsMongoId,
   Min,
   IsOptional,
   IsDate,
-  IsISO8601,
-  IsPositive,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
+  /* ---------- Datos básicos ---------- */
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -22,6 +20,7 @@ export class CreateProductDto {
   @IsString()
   description?: string;
 
+  /* ---------- Relaciones ---------- */
   @IsOptional()
   @IsMongoId()
   activity_id?: string;
@@ -38,6 +37,7 @@ export class CreateProductDto {
   @IsMongoId()
   campus_id?: string;
 
+  /* ---------- Capacidad y precio ---------- */
   @IsOptional()
   @IsNumber()
   @Min(1)
@@ -53,20 +53,26 @@ export class CreateProductDto {
   @Min(0)
   price?: number;
 
+  /* ---------- Imagen ---------- */
   @IsOptional()
   @IsString()
   image?: string;
 
+  /* ---------- Fecha y hora ---------- */
   @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  activity_day?: Date;
+  @IsString()
+  activity_day?: string;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
   activity_duration?: number;
 
+  @IsOptional()
+  @IsString()
+  activity_time?: string;
+
+  /* ---------- Ubicación (división política) ---------- */
   @IsOptional()
   @IsMongoId()
   activity_department_id?: string;
@@ -83,15 +89,12 @@ export class CreateProductDto {
   @IsMongoId()
   activity_city_id?: string;
 
+  /* ---------- Dirección específica ---------- */
   @IsOptional()
   @IsString()
   activity_address?: string;
 
-  @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  activity_time?: Date;
-
+  /* ---------- Disponibilidad ---------- */
   @IsOptional()
   @IsBoolean()
   is_available?: boolean;
@@ -99,4 +102,13 @@ export class CreateProductDto {
   @IsOptional()
   @IsBoolean()
   registration_availability?: boolean;
+
+  /* ---------- NUEVOS CAMPOS ---------- */
+  @IsOptional()
+  @IsMongoId()
+  location_reference_id?: string;
+
+  @IsOptional()
+  @IsString()
+  location_description?: string;
 }

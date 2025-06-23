@@ -10,7 +10,9 @@ import { Activity } from '@activity/schema/activity.schema';
 import { Category } from '@category/schema/category.schema';
 import { Risk } from '@risk/schema/risk.schema';
 
-//for injecting
+// (Opcional) importa el esquema de Location si existe.
+// import { Location } from '@location/schema/location.schema';
+
 export type ProductDocument = HydratedDocument<Product>;
 
 @Schema({
@@ -27,36 +29,27 @@ export type ProductDocument = HydratedDocument<Product>;
   },
 })
 export class Product {
+  /* ---------- Datos básicos ---------- */
   @Prop({ required: true })
   name: string;
 
   @Prop()
   description?: string;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Activity.name,
-  })
+  /* ---------- Relaciones ---------- */
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Activity.name })
   activity_id?: Activity;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Category.name,
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Category.name })
   category_id?: Category;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Risk.name,
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Risk.name })
   risk_id?: Risk;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Campus.name,
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Campus.name })
   campus_id?: Campus;
 
+  /* ---------- Capacidad y precio ---------- */
   @Prop()
   capacity?: number;
 
@@ -66,50 +59,53 @@ export class Product {
   @Prop()
   price?: number;
 
+  /* ---------- Imagen ---------- */
   @Prop()
   image?: string;
 
+  /* ---------- Fecha y hora ---------- */
   @Prop()
-  activity_day?: Date;
+  activity_day?: string;
 
   @Prop()
   activity_duration?: number;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Department.name,
-  })
+  @Prop()
+  activity_time?: string;
+
+  /* ---------- Ubicación (división política) ---------- */
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Department.name })
   activity_department_id?: Department;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: Province.name,
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Province.name })
   activity_province_id?: Province;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: District.name,
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: District.name })
   activity_district_id?: District;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: City.name,
-  })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: City.name })
   activity_city_id?: City;
 
+  /* ---------- Dirección específica ---------- */
   @Prop()
   activity_address?: string;
 
-  @Prop()
-  activity_time?: Date;
-
+  /* ---------- Disponibilidad ---------- */
   @Prop({ default: false })
   is_available?: boolean;
 
   @Prop({ default: true })
   registration_availability?: boolean;
+
+  /* ---------- NUEVOS CAMPOS ---------- */
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    // ref: Location.name, // Descomenta y ajusta si tienes colección de Location
+  })
+  location_reference_id?: mongoose.Types.ObjectId;
+
+  @Prop()
+  location_description?: string;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

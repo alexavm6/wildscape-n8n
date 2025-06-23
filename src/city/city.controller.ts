@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { CityService } from './city.service';
 import { CreateCityDto } from './dto/create-city.dto';
@@ -24,23 +25,28 @@ import { ParseMongoIdPipe } from '@common/pipes/parse-mongo-id.pipe';
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 
-  /*
-    para: usuarios
-  */
-
+  /* ──────────── Usuarios ──────────── */
   @Get('filter')
   async findAllProductFilter() {
-    return this.cityService.findAllProductFilter();
+    const data = await this.cityService.findAllProductFilter();
+    return {
+      statusCode: 200,
+      message: 'Filtro de ciudades obtenido correctamente',
+      data,
+    };
   }
 
-  /*
-    para: administrador
-  */
+  /* ──────────── Administrador ──────────── */
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management-filter')
   async findAllManagementFilter(@Query('name') name?: string) {
-    return this.cityService.findAllManagementFilter(name);
+    const data = await this.cityService.findAllManagementFilter(name);
+    return {
+      statusCode: 200,
+      message: 'Filtro administrativo aplicado correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -49,14 +55,24 @@ export class CityController {
   async findAllManagement(
     @Query() paginationManagementDto: PaginationManagementDto,
   ) {
-    return this.cityService.findAllManagement(paginationManagementDto);
+    const data = await this.cityService.findAllManagement(paginationManagementDto);
+    return {
+      statusCode: 200,
+      message: 'Ciudades administrativas listadas correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management/:id')
   async findByIdManagement(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.cityService.findByIdManagement(id);
+    const data = await this.cityService.findByIdManagement(id);
+    return {
+      statusCode: 200,
+      message: 'Ciudad administrativa obtenida correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -66,20 +82,35 @@ export class CityController {
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateCityDto: UpdateCityDto,
   ) {
-    return this.cityService.updateById(id, updateCityDto);
+    const data = await this.cityService.updateById(id, updateCityDto);
+    return {
+      statusCode: 200,
+      message: 'Ciudad actualizada correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createCityDto: CreateCityDto) {
-    return this.cityService.create(createCityDto);
+    const data = await this.cityService.create(createCityDto);
+    return {
+      statusCode: 200,
+      message: 'Ciudad creada correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async delete(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.cityService.delete(id);
+    const data = await this.cityService.delete(id);
+    return {
+      statusCode: 200,
+      message: 'Ciudad eliminada correctamente',
+      data,
+    };
   }
 }

@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   UseGuards,
   UseFilters,
+  HttpStatus,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -20,6 +21,7 @@ import { RolesGuard } from '@auth/guards/roles.guard';
 import { Role } from '@enums/enums';
 
 @Controller('company')
+@UseFilters(HttpExceptionFilter)
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
@@ -30,14 +32,24 @@ export class CompanyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management')
   async findAllManagement() {
-    return this.companyService.findAllManagement();
+    const data = await this.companyService.findAllManagement();
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Empresas listadas correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management/:id')
   async findByIdManagement(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.companyService.findByIdManagement(id);
+    const data = await this.companyService.findByIdManagement(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Empresa obtenida correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -47,6 +59,11 @@ export class CompanyController {
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
   ) {
-    return this.companyService.updateById(id, updateCompanyDto);
+    const data = await this.companyService.updateById(id, updateCompanyDto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Empresa actualizada correctamente',
+      data,
+    };
   }
 }

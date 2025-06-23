@@ -20,12 +20,21 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+    const data = await this.authService.login(loginDto);
+    return {
+      statusCode: 200,
+      message: 'Inicio de sesión exitoso',
+      data,
+    };
   }
 
-  //solo puedes crear usuarios, no administradores, no employees
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+    const data = await this.authService.signup(createUserDto);
+    return {
+      statusCode: 200,
+      message: 'Usuario registrado correctamente',
+      data,
+    };
   }
 }

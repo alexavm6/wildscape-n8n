@@ -26,65 +26,54 @@ import { PaginationManagementProductDto } from './dto/pagination-management-prod
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  /*
-    para: usuarios
-  */
-  /*1*/
   @Get()
   async findAll(@Query() paginationDto: PaginationDto) {
-    return this.productService.findAll(paginationDto);
+    const data = await this.productService.findAll(paginationDto);
+    return { statusCode: 200, message: 'Productos listados correctamente', data };
   }
 
-  /*4*/
   @Get('filter')
   async findAllFilter(@Query('name') name?: string) {
-    return this.productService.findAllFilter(name);
+    const data = await this.productService.findAllFilter(name);
+    return { statusCode: 200, message: 'Filtro aplicado correctamente', data };
   }
 
-  /*5*/
   @Get('search')
-  async findAllSearch(
-    @Query() paginationSearchProductDto: PaginationSearchProductDto,
-  ) {
-    return this.productService.findAllSearch(paginationSearchProductDto);
+  async findAllSearch(@Query() dto: PaginationSearchProductDto) {
+    const data = await this.productService.findAllSearch(dto);
+    return { statusCode: 200, message: 'Búsqueda realizada correctamente', data };
   }
 
-  /*
-    para: usuario logeado
-  */
   @Roles(Role.Administrator, Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('user')
   async findByUserId(@Req() req: any, @Query() paginationDto: PaginationDto) {
-    return this.productService.findByUserId(req.user, paginationDto);
+    const data = await this.productService.findByUserId(req.user, paginationDto);
+    return { statusCode: 200, message: 'Productos del usuario listados correctamente', data };
   }
 
-  /*
-    para: administrador
-  */
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management-filter')
   async findAllManagementFilter(@Query('name') name?: string) {
-    return this.productService.findAllManagementFilter(name);
+    const data = await this.productService.findAllManagementFilter(name);
+    return { statusCode: 200, message: 'Filtro administrativo aplicado correctamente', data };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management')
-  async findAllManagement(
-    @Query() paginationManagementProductDto: PaginationManagementProductDto,
-  ) {
-    return this.productService.findAllManagement(
-      paginationManagementProductDto,
-    );
+  async findAllManagement(@Query() dto: PaginationManagementProductDto) {
+    const data = await this.productService.findAllManagement(dto);
+    return { statusCode: 200, message: 'Productos administrativos listados correctamente', data };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management/:id')
   async findByIdManagement(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.productService.findByIdManagement(id);
+    const data = await this.productService.findByIdManagement(id);
+    return { statusCode: 200, message: 'Producto administrativo obtenido correctamente', data };
   }
 
   @Roles(Role.Administrator)
@@ -92,31 +81,31 @@ export class ProductController {
   @Patch(':id')
   async updateById(
     @Param('id', ParseMongoIdPipe) id: string,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() dto: UpdateProductDto,
   ) {
-    return this.productService.updateById(id, updateProductDto);
+    const data = await this.productService.updateById(id, dto);
+    return { statusCode: 200, message: 'Producto actualizado correctamente', data };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  async create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async create(@Body() dto: CreateProductDto) {
+    const data = await this.productService.create(dto);
+    return { statusCode: 200, message: 'Producto creado correctamente', data };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async delete(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.productService.delete(id);
+    const data = await this.productService.delete(id);
+    return { statusCode: 200, message: 'Producto eliminado correctamente', data };
   }
 
-  /*
-    para: usuarios
-  */
-  /*3*/
   @Get(':id')
   async findById(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.productService.findById(id);
+    const data = await this.productService.findById(id);
+    return { statusCode: 200, message: 'Producto obtenido correctamente', data };
   }
 }

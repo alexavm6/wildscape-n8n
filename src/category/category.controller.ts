@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -23,27 +24,39 @@ import { ParseMongoIdPipe } from '@common/pipes/parse-mongo-id.pipe';
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
-  /*
-    para: usuarios
-  */
+
+  /* ──────── Usuarios ──────── */
   @Get()
   async findAll(@Query() paginationDto: PaginationDto) {
-    return this.categoryService.findAll(paginationDto);
+    const data = await this.categoryService.findAll(paginationDto);
+    return {
+      statusCode: 200,
+      message: 'Categorías listadas correctamente',
+      data,
+    };
   }
 
   @Get('filter')
   async findAllProductFilter() {
-    return this.categoryService.findAllProductFilter();
+    const data = await this.categoryService.findAllProductFilter();
+    return {
+      statusCode: 200,
+      message: 'Filtro de categorías obtenido correctamente',
+      data,
+    };
   }
 
-  /*
-    para: administrador
-  */
+  /* ──────── Administrador ──────── */
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management-filter')
   async findAllManagementFilter(@Query('name') name?: string) {
-    return this.categoryService.findAllManagementFilter(name);
+    const data = await this.categoryService.findAllManagementFilter(name);
+    return {
+      statusCode: 200,
+      message: 'Filtro administrativo de categorías aplicado correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -52,14 +65,24 @@ export class CategoryController {
   async findAllManagement(
     @Query() paginationManagementDto: PaginationManagementDto,
   ) {
-    return this.categoryService.findAllManagement(paginationManagementDto);
+    const data = await this.categoryService.findAllManagement(paginationManagementDto);
+    return {
+      statusCode: 200,
+      message: 'Categorías administrativas listadas correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('management/:id')
   async findByIdManagement(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.categoryService.findByIdManagement(id);
+    const data = await this.categoryService.findByIdManagement(id);
+    return {
+      statusCode: 200,
+      message: 'Categoría administrativa obtenida correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
@@ -69,20 +92,35 @@ export class CategoryController {
     @Param('id', ParseMongoIdPipe) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.updateById(id, updateCategoryDto);
+    const data = await this.categoryService.updateById(id, updateCategoryDto);
+    return {
+      statusCode: 200,
+      message: 'Categoría actualizada correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
+    const data = await this.categoryService.create(createCategoryDto);
+    return {
+      statusCode: 200,
+      message: 'Categoría creada correctamente',
+      data,
+    };
   }
 
   @Roles(Role.Administrator)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async delete(@Param('id', ParseMongoIdPipe) id: string) {
-    return this.categoryService.delete(id);
+    const data = await this.categoryService.delete(id);
+    return {
+      statusCode: 200,
+      message: 'Categoría eliminada correctamente',
+      data,
+    };
   }
 }
