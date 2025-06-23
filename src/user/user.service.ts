@@ -37,8 +37,15 @@ export class UserService {
     return updatedProduct;
   }
 
-  async deleteById(id: string): Promise<void> {
-    const result = await this.userModel.findByIdAndDelete(id);
-    if (!result) throw new NotFoundException(`Product with ID ${id} not found`);
+  async deleteById(id: string): Promise<User> {
+    const user = await this.userModel.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(`User con ID ${id} no encontrado`);
+    }
+
+    await user.deleteOne();
+
+    return user;
   }
 }
